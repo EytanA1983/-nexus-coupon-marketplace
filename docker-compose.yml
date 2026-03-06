@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nexus_cm_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nexus_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexus_password}
+      POSTGRES_DB: ${POSTGRES_DB:-nexus_coupon_db}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - nexus_cm_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nexus_user} -d ${POSTGRES_DB:-nexus_coupon_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - nexus_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runner
+    container_name: nexus_cm_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nexus_user}:${POSTGRES_PASSWORD:-nexus_password}@postgres:5432/${POSTGRES_DB:-nexus_coupon_db}?schema=public
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret-at-least-32-chars}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      RESELLER_API_TOKEN: ${RESELLER_API_TOKEN:-nexus-reseller-token}
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - nexus_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: runner
+    container_name: nexus_cm_frontend
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000/api}
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - nexus_network
+
+volumes:
+  nexus_cm_postgres_data:
+    driver: local
+
+networks:
+  nexus_network:
+    driver: bridge

@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  type        ProductType
+  imageUrl    String      @map("image_url")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  coupon      Coupon?
+  purchase    Purchase?
+
+  @@map("products")
+}
+
+model Coupon {
+  productId         String          @id @map("product_id")
+  costPrice         Decimal         @db.Decimal(10, 2) @map("cost_price")
+  marginPercentage  Decimal         @db.Decimal(10, 2) @map("margin_percentage")
+  minimumSellPrice  Decimal         @db.Decimal(10, 2) @map("minimum_sell_price")
+  isSold            Boolean         @default(false) @map("is_sold")
+  soldAt            DateTime?       @map("sold_at")
+  valueType         CouponValueType @map("value_type")
+  value             String
+
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("coupons")
+}
+
+model Purchase {
+  id           String          @id @default(uuid())
+  productId    String          @unique @map("product_id")
+  channel      PurchaseChannel
+  finalPrice   Decimal         @db.Decimal(10, 2) @map("final_price")
+  resellerName String?         @map("reseller_name")
+  purchasedAt  DateTime        @default(now()) @map("purchased_at")
+  createdAt    DateTime        @default(now()) @map("created_at")
+
+  product      Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  passwordHash String    @map("password_hash")
+  role         UserRole
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+enum ProductType {
+  COUPON
+}
+
+enum CouponValueType {
+  STRING
+  IMAGE
+}
+
+enum PurchaseChannel {
+  DIRECT_CUSTOMER
+  RESELLER
+}
+
+enum UserRole {
+  ADMIN
+}
