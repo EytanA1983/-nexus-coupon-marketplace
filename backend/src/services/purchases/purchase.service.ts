@@ -1,8 +1,6 @@
 import { Prisma, PurchaseChannel } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
-import { NotFoundError } from '../../errors/NotFoundError';
-import { ConflictError } from '../../errors/ConflictError';
-import { BadRequestError } from '../../errors/BadRequestError';
+import { NotFoundError, ConflictError, BadRequestError } from '../../errors';
 import { ERROR_CODES } from '../../constants/errorCodes';
 
 type DirectPurchaseInput = {

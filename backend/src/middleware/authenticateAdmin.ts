@@ -28,7 +28,7 @@ export function authenticateAdmin(req: Request, _res: Response, next: NextFuncti
       throw new ForbiddenError('Admin access required');
     }
     // attach minimal identity for downstream use
-    req.user = { id: payload.sub, email: payload.email, role: payload.role };
+    req.user = { id: payload.sub, username: payload.username, role: payload.role };
     next();
   } catch (err) {
     next(err);

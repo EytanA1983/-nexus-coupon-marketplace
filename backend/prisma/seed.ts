@@ -60,6 +60,24 @@ async function main(): Promise<void> {
       marginPercentage: 15,
       valueType: CouponValueType.IMAGE,
       value: "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=CINEMA-QR-2026-0001"
+    },
+    {
+      name: "Netflix Gift Card $75",
+      description: "Netflix gift card redeemable for subscription.",
+      imageUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?q=80&w=1200&auto=format&fit=crop",
+      costPrice: 60,
+      marginPercentage: 25,
+      valueType: CouponValueType.STRING,
+      value: "NETFLIX-75-MNOP-9876"
+    },
+    {
+      name: "Uber Eats $30 Credit",
+      description: "Uber Eats delivery credit worth $30.",
+      imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1200&auto=format&fit=crop",
+      costPrice: 24,
+      marginPercentage: 25,
+      valueType: CouponValueType.STRING,
+      value: "UBER-EATS-30-QRST-5432"
     }
   ];
 

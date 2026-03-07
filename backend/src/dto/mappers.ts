@@ -42,7 +42,7 @@ export function toPublicProductDto(product: ProductWithCoupon): PublicProductRes
  */
 export function toAdminProductDto(
   product: ProductWithCoupon,
-  latestPurchase?: Purchase | null
+  _latestPurchase?: Purchase | null
 ): AdminProductResponseDto {
   if (!product.coupon) {
     throw new Error('Product must have a coupon');

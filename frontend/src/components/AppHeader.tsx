@@ -27,29 +27,15 @@ export default function AppHeader({
             <div>
               <p className="brand-title">Nexus Coupon Marketplace</p>
               <p className="brand-subtitle">
-                Minimal digital marketplace with secure purchase flows
+                Secure digital coupon marketplace
               </p>
             </div>
           </div>
 
           <div className="nav-actions">
             {isAdmin ? (
-              <button 
-                type="button" 
-                className="btn btn-ghost" 
-                onClick={handleLogout}
-                style={{ 
-                  minWidth: '100px',
-                  fontWeight: '700',
-                  fontSize: '0.95rem',
-                  padding: '12px 20px',
-                  border: '2px solid var(--primary)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  color: 'var(--primary)',
-                  boxShadow: '0 2px 8px rgba(183, 134, 82, 0.2)'
-                }}
-              >
-                🔓 Logout
+              <button type="button" className="btn btn-ghost" onClick={handleLogout}>
+                Logout
               </button>
             ) : null}
           </div>

@@ -15,7 +15,7 @@ adminPurchasesRouter.get('/', async (_req, res, next) => {
           select: {
             id: true,
             name: true,
-            productType: true,
+            type: true,
           },
         },
       },
