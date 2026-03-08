@@ -23,9 +23,9 @@ COPY index.html ./
 COPY src ./src
 COPY public ./public
 
-# Build application (VITE_API_URL is set at build time via ARG)
-ARG VITE_API_URL=http://localhost:3000/api
-ENV VITE_API_URL=$VITE_API_URL
+# Build application (VITE_API_BASE_URL is set at build time via ARG)
+ARG VITE_API_BASE_URL=http://localhost:3000
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # Production stage with nginx

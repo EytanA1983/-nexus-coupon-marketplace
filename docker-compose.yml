@@ -57,11 +57,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: runner
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://backend:3000}
     container_name: nexus_cm_frontend
     depends_on:
       - backend
-    environment:
-      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000/api}
     ports:
       - "${FRONTEND_PORT:-8080}:80"
     healthcheck:
