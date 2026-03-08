@@ -38,6 +38,7 @@ export default function AdminProductsPage() {
       setError("");
 
       const data = await getAdminProducts();
+      console.log("Loaded products:", data.length, "items");
       setProducts(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to load products";
