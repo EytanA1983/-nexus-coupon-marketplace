@@ -330,7 +330,8 @@ export default function AdminProductsPage() {
                   <tr>
                     <th>Image</th>
                     <th>Name</th>
-                    <th>Type</th>
+                    <th>Value Type</th>
+                    <th>Value</th>
                     <th>Cost</th>
                     <th>Margin %</th>
                     <th>Minimum Sell</th>
@@ -366,14 +367,37 @@ export default function AdminProductsPage() {
                       </td>
                       <td>{product.name}</td>
                       <td>{product.value_type}</td>
-                      <td>{product.cost_price}</td>
-                      <td>{product.margin_percentage}</td>
-                      <td>{product.minimum_sell_price}</td>
+                      <td>
+                        {product.value_type === "IMAGE" ? (
+                          <img
+                            src={product.value}
+                            alt="Coupon value"
+                            style={{
+                              width: 60,
+                              height: 60,
+                              objectFit: "cover",
+                              borderRadius: 8,
+                              border: "1px solid #e7d9c8",
+                            }}
+                          />
+                        ) : (
+                          <code style={{ fontSize: "0.85rem", color: "var(--primary)" }}>
+                            {product.value}
+                          </code>
+                        )}
+                      </td>
+                      <td>${product.cost_price}</td>
+                      <td>{product.margin_percentage}%</td>
+                      <td>${product.minimum_sell_price}</td>
                       <td>
                         {product.is_sold ? (
-                          <span className="badge">Sold</span>
+                          <span className="badge" style={{ background: "#f1d8d8", color: "#7f3838" }}>
+                            Sold
+                          </span>
                         ) : (
-                          <span className="badge">Available</span>
+                          <span className="badge" style={{ background: "#edf7ef", color: "#4f7f5f" }}>
+                            Available
+                          </span>
                         )}
                       </td>
                       <td>
